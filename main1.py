@@ -5,7 +5,7 @@ import cv2
 import tkinter as tk
 from tkinter import filedialog
 import subprocess
-import numpy as np
+# Import additional libraries or functions if needed
 from sort.sort import *
 from util import get_car, read_license_plate, write_csv
 
@@ -37,6 +37,11 @@ class VideoPlayerApp:
         # Create widgets
         self.label = tk.Label(root, text="Video Player")
         self.label.pack(pady=10)
+
+        # Entry widget for license plate text
+        self.license_plate_entry = tk.Entry(root, width=20)
+        self.license_plate_entry.pack(pady=10)
+        self.license_plate_entry.insert(0, "AP05JEO")  # Default value
 
         self.btn_upload = tk.Button(root, text="Upload Video", command=self.upload_video)
         self.btn_upload.pack(pady=10)
@@ -112,10 +117,12 @@ class VideoPlayerApp:
         subprocess.Popen(['start', 'excel', csv_file_path], shell=True)
 
         # Perform action if specific license plate is detected
+        target_license_plate = self.license_plate_entry.get().upper()
+
         texts = [car['license_plate']['text'] for frame in results.values() for car in frame.values()]
 
         for text in texts:
-            if "AP05JEO" in text:
+            if text == target_license_plate:
                 rotateservo(pin, 90)
                 sleep(3)
                 rotateservo(pin, 0)  # Release the servo to its default position
@@ -126,8 +133,10 @@ class VideoPlayerApp:
         cap.release()
         self.root.destroy()
 
+
 if __name__ == "__main__":
     root = tk.Tk()
     app = VideoPlayerApp(root)
+    root.geometry("600x400")  # Set the initial window size
     root.mainloop()
 
