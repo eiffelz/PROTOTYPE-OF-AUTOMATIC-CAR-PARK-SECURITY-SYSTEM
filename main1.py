@@ -5,7 +5,7 @@ import cv2
 import tkinter as tk
 from tkinter import filedialog
 import subprocess
-# Import additional libraries or functions if needed
+
 from sort.sort import *
 from util import get_car, read_license_plate, write_csv
 
